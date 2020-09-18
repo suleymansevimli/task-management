@@ -14,6 +14,6 @@ export class Task extends BaseEntity {
   description: string;
 
   @Column()
-  status: TaskStatus
+  status: TaskStatus;
 
 }

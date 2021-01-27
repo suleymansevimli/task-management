@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Logger,
   Param, ParseIntPipe,
   Patch,
   Post,
@@ -25,6 +25,9 @@ import { GetUser } from '../auth/decorator/get-user.decorator';
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+
+  private logger = new Logger('TasksController')
+
   constructor(private tasksService: TasksService) {
   }
 
@@ -33,7 +36,7 @@ export class TasksController {
     @Query(ValidationPipe) filterDto: GetTasksFilterDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
-    console.log('USER', user);
+    this.logger.verbose(`user retrieving all tasks username = ${user.username} and filters = ${JSON.stringify(filterDto)}`)
     return this.tasksService.getTasks(filterDto, user);
   }
 
@@ -51,6 +54,7 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
+    this.logger.error(`${user.username} was created a new task. Task title is ${createTaskDto.title}`)
     return this.tasksService.createTask(createTaskDto, user);
   }
 
